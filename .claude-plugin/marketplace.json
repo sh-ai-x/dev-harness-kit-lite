@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "dev-kit-lite",
+  "owner": {
+    "name": "sanghee",
+    "url": "https://github.com/sanghee"
+  },
+  "plugins": [
+    {
+      "name": "dev-kit-lite",
+      "description": "4-hour MVP/POC team-collab plugin — 8 skills, 7 hooks, 6 stages. Pruned from dev-harness-kit for greenfield sprints. L5-R non-overlap (one person = one in-flight step), advisory-only review.yml, mandatory PM/coordinator role.",
+      "version": "0.1.0",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/sh-ai-x/dev-harness-kit-lite",
+        "ref": "main"
+      },
+      "category": "development",
+      "tags": ["mvp", "poc", "team-collab", "tdd", "worktree", "vite-lite"]
+    }
+  ]
+}

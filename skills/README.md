@@ -1,6 +1,6 @@
 # Skills — dev-harness-kit-lite
-
 10 skills for 4-hour MVP/POC team sprints.
+
 
 | Skill | Stage | Purpose |
 |-------|-------|---------|
