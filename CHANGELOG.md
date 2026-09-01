@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.5 (2026-09-01)
+
+Adds two role-scoped skills for daily-driver work:
+
+**`role-plan` (Stage 1.6)** — slices the project plan into one focused doc per role. Reads `.dev-kit/role-config.json`, `.dev-kit/team-roster.json`, `PRD.md`, `phases/<name>/index.json`, and `phases/<name>/owners.json`; emits `phases/<name>/role-plans/<role-key>.md` for each role. Each file lists ONLY that role's assigned steps (filtered by owner identifier), their dependency edges, the cross-role read paths they're allowed to consume, and the per-step branch/worktree/TDD entry points. The `planner.md` file is special — it's the PM's overview with the cross-role handoff chain. Idempotent: re-runnable after `plan-update` or `team-roster` changes.
+
+**`role-tdd` (Stage 4a)** — TDD workflow scoped to one role-owner identifier. The role-owner runs this in their own worktree; the skill filters `phases/<name>/index.json` to only their steps and drives Red-Green-Refactor in dependency order. Same Iron Laws as `build-tdd` (L1/L2/L3/L4/L5/L5-R), but the pre-flight explicitly refuses to start a step whose cross-role dependency isn't merged yet (no silent reaching across roles). Writes status updates to both `phases/<name>/index.json` and the role-plan.
+
+Together these give each role-owner a one-file daily-driver view of their work, plus a scoped TDD command they can run without PM involvement. Replaces the "PM writes one plan, role-owners grep for their step" pattern.
+
 ## v0.1.4 (2026-09-01)
 
 Adds `migrate` skill (Stage 1.4) — adopts dev-kit-lite into an **existing** project with minimal disruption. **Layout-agnostic by design**: the same skill works whether the project lives in one repo, a workspace (pnpm/nx/turbo/lerna), or several repos with a shared contracts/ location. The skill detects the setup automatically (records it as `migrated_from.setup_kind` — purely informational) and never asks the user to declare monorepo-vs-multi-repo.
@@ -12,24 +22,16 @@ Phase-gated so the team never gets overwritten on day one. For multi-repo, write
 
 ## v0.1.3 (2026-09-01)
 
-Adds `role` skill (Stage 1.3) — manages the role taxonomy (`planner`, `frontend`, `backend`, `ai`, `design`) with **responsibility-area separation** (SRP here means "clear lane boundaries", not "every file has exactly one owner"). The check is: for every top-level directory, does the configuration unambiguously say which role owns it? Two roles claiming the same `owns_paths` is ambiguous — must be resolved (pick one owner, split the directory, or move to `shared_write_paths` with PM sign-off). Cross-role reads via `shared_read_paths` are allowed and expected.
-
-**Tech-stack agnostic**: every role declares its own `tech_stack` + `owns_paths`; the skill ships no baked-in defaults like `apps/web/**` or `next.config.js`. Users pick from built-in presets (`nextjs-app-router`, `react-vite`, `react-native-cli`, `expo`, `vue-nuxt`, `sveltekit`, `fastapi`, `django`, `flask`, `express`, `nestjs`, `go-gin`, `spring-boot`, `minimax-only`, `anthropic-only`, `multi-provider`, `figma-mcp`, `penpot-export`, `sketch-export`) or write custom ones at `templates/tech-stacks/<name>.json`. Empty `owns_paths` blocks plan generation until the team picks a stack.
-
-Upstream of `plan`, `plan-update`, `team-roster`, `build-tdd`, and `migrate` — those five must be re-invoked after any `role` change.
+Adds `role` skill (Stage 1.3) — manages the role taxonomy with **responsibility-area separation** (SRP here means "clear lane boundaries", not "every file has exactly one owner") and is fully **tech-stack agnostic** (no baked-in Next.js / FastAPI defaults). Roles: planner, frontend, backend, ai, design.
 
 ## v0.1.2 (2026-09-01)
 
-Adds `team-roster` skill (Stage 1.5) — pre-plan gate that defines the team roster (`{role, identifier, name}` per member, multiple per role allowed) and acceptance-checks coverage. Accepts a dependency graph and splits steps along dependency layers (DAG; cycle = hard error), then assigns owners per layer with critical-path priority. Syncs `phases/<name>/owners.json` with `identifier` field and updates each `step<N>.md` `## Role` section with `Depends on:` and `Layer:`. Refuses to return success while any roster member has zero step assignments.
-
-Roles supported: `planner` (PM), `frontend`, `backend`, `ai`, `design`. AI is a first-class role in this skill.
+Adds `team-roster` skill (Stage 1.5) — defines the team roster with `{role, identifier, name}` per member. Accepts a dependency graph and splits steps along dependency layers (DAG; cycle = hard error). Coverage check blocks success while any member is unassigned.
 
 ## v0.1.1 (2026-09-01)
 
-Adds `idea-eval` skill (Stage 0) — pre-sprint gate that scores an MVP/hackathon idea on 8 axes (100 pts) and returns S/A/B/C/D grade with the single biggest risk + 1-minute demo tip. Cold-realism judge role, evidence-before-claim scoring reasons, artifact written to `.dev-kit/idea-eval/<slug>.md`.
-
-Also switches CI review provider from Anthropic to MiniMax (`MINIMAX_API_KEY` via `api.minimax.io/anthropic`), drops the SessionStart `session-start-check.sh` hook (worktree-guard is the hard-block layer; the gentle reminder added noise without value). Adds `id-token: write` to `review.yml` permissions.
+Adds `idea-eval` skill (Stage 0) — scores an MVP/hackathon idea on 8 axes (100 pts). CI: switches to MiniMax via `api.minimax.io/anthropic`. Hooks: drops `session-start-check.sh`. Adds `id-token: write` to `review.yml`.
 
 ## v0.1.0 (2026-09-01)
 
-Initial release. 7 skills (bootstrap, plan, ci-setup, build-tdd, build-verify, review, reassign), 7 hooks, 6 stages. Designed for 4-hour greenfield MVP/POC team sprints.
+Initial release. 7 skills (bootstrap, plan, ci-setup, build-tdd, build-verify, review, reassign), 7 hooks, 6 stages.
