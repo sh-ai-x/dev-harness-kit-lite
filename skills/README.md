@@ -4,6 +4,7 @@
 
 | Skill | Stage | Purpose |
 |-------|-------|---------|
+| `/dev-kit-lite:idea-eval` | 0 | Score an idea on 8 axes (100 pts) — pre-sprint gate before `plan` |
 | `/dev-kit-lite:bootstrap` | 1 | Scaffold CLAUDE.md + AGENTS.md + .active-hooks.json + first commit |
 | `/dev-kit-lite:plan` | 2 | Write PRD.md + phases/<name>/ + owners.json (initial assignment) |
 | `/dev-kit-lite:plan-update` | 2b | PM-only mid-sprint PRD/phases mutation |
