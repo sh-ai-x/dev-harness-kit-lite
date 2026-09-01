@@ -1,0 +1,100 @@
+# version-guard — fails PR if skills/ or .claude/commands/ gain files
+# but plugin.json version did not bump.
+#
+# Addresses issue #6: "Marketplace update invisible: cache is stale
+# when new files land without a version bump". The Claude Code plugin
+# cache is keyed by the version string, so new skills/commands are
+# invisible to `claude plugin update` until a version bump rebuilds
+# the cache. This workflow prevents that class of bug at PR time.
+#
+# Whitelist: docs-only changes (skills/README.md, CHANGELOG.md,
+# templates/, etc.) and per-skill modifications (existing SKILL.md
+# edits) don't trigger the guard. Only NEW skill directories or NEW
+# command files count.
+
+name: version-guard
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compare skill/command inventory + plugin.json version across the PR diff
+        run: |
+          set -euo pipefail
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          # Recursive directory listing picks up skills/<name>/ dirs
+          # (which `git ls-tree -d` without -r would miss).
+          BASE_SKILLS=$(git ls-tree -d -r --name-only "$BASE_SHA" \
+            | grep -E '^skills/[^/]+$' | sort -u || true)
+          HEAD_SKILLS=$(git ls-tree -d -r --name-only "$HEAD_SHA" \
+            | grep -E '^skills/[^/]+$' | sort -u || true)
+
+          BASE_CMDS=$(git ls-tree -r --name-only "$BASE_SHA" \
+            | grep -E '^\.claude/commands/[^/]+\.md$' | sort -u || true)
+          HEAD_CMDS=$(git ls-tree -r --name-only "$HEAD_SHA" \
+            | grep -E '^\.claude/commands/[^/]+\.md$' | sort -u || true)
+
+          BASE_CODEX=$(git ls-tree -r --name-only "$BASE_SHA" \
+            | grep -E '^\.codex/commands/[^/]+\.md$' | sort -u || true)
+          HEAD_CODEX=$(git ls-tree -r --name-only "$HEAD_SHA" \
+            | grep -E '^\.codex/commands/[^/]+\.md$' | sort -u || true)
+
+          NEW_SKILLS=$(comm -13 <(echo "$BASE_SKILLS") <(echo "$HEAD_SKILLS") || true)
+          NEW_CMDS=$(comm -13 <(echo "$BASE_CMDS") <(echo "$HEAD_CMDS") || true)
+          NEW_CODEX=$(comm -13 <(echo "$BASE_CODEX") <(echo "$HEAD_CODEX") || true)
+
+          # Read versions from both plugin.json manifests at both SHAs.
+          read_version() {
+            git show "$1:$2" 2>/dev/null \
+              | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])" 2>/dev/null \
+              || echo ""
+          }
+          BASE_CLAUDE_VER=$(read_version "$BASE_SHA" .claude-plugin/plugin.json)
+          HEAD_CLAUDE_VER=$(read_version "$HEAD_SHA" .claude-plugin/plugin.json)
+          BASE_CODEX_VER=$(read_version "$BASE_SHA" .codex-plugin/plugin.json)
+          HEAD_CODEX_VER=$(read_version "$HEAD_SHA" .codex-plugin/plugin.json)
+
+          echo "BASE: skills=$(echo "$BASE_SKILLS" | grep -c . || echo 0) cmds=$(echo "$BASE_CMDS" | grep -c . || echo 0) codex=$(echo "$BASE_CODEX" | grep -c . || echo 0)"
+          echo "HEAD: skills=$(echo "$HEAD_SKILLS" | grep -c . || echo 0) cmds=$(echo "$HEAD_CMDS" | grep -c . || echo 0) codex=$(echo "$HEAD_CODEX" | grep -c . || echo 0)"
+          echo "Claude version: $BASE_CLAUDE_VER -> $HEAD_CLAUDE_VER"
+          echo "Codex  version: $BASE_CODEX_VER -> $HEAD_CODEX_VER"
+
+          REASON=""
+          [ -n "$(echo "$NEW_SKILLS" | tr -d '[:space:]')" ] && REASON="$REASON
+- new skill dir(s): $NEW_SKILLS"
+          [ -n "$(echo "$NEW_CMDS" | tr -d '[:space:]')" ] && REASON="$REASON
+- new Claude command file(s): $NEW_CMDS"
+          [ -n "$(echo "$NEW_CODEX" | tr -d '[:space:]')" ] && REASON="$REASON
+- new Codex command file(s): $NEW_CODEX"
+
+          if [ -z "$(echo "$REASON" | tr -d '[:space:]')" ]; then
+            echo "OK: no new skill/command files; version bump not required."
+            exit 0
+          fi
+
+          # Any version bump is enough (Claude OR Codex must change).
+          if [ "$BASE_CLAUDE_VER" != "$HEAD_CLAUDE_VER" ] || [ "$BASE_CODEX_VER" != "$HEAD_CODEX_VER" ]; then
+            echo "OK: new files detected AND a version was bumped."
+            exit 0
+          fi
+
+          {
+            echo "::error::plugin.json version did NOT bump despite new skill/command files."
+            echo "::error::New files added:$REASON"
+            echo "::error::Claude version stayed at $BASE_CLAUDE_VER, Codex version stayed at $BASE_CODEX_VER."
+            echo "::error::The Claude Code plugin cache is keyed by the version string, so without a bump"
+            echo "::error::other repos will not see these new files via \`claude plugin update\` (issue #6)."
+            echo "::error::"
+            echo "::error::Fix: bump \`version\` in BOTH .claude-plugin/plugin.json AND .codex-plugin/plugin.json."
+          } >&2
+          exit 1
