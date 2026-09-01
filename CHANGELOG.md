@@ -2,11 +2,11 @@
 
 ## v0.1.3 (2026-09-01)
 
-Adds `role` skill (Stage 1.3) — manages the role taxonomy (`planner`, `frontend`, `backend`, `ai`, `design`) with SRP-aware directory separation. Each role owns a **disjoint** set of directories; cross-role touching is a design defect, not a normal state. Writes both `.dev-kit/role-config.json` (machine-readable, consumed by plan/plan-update/team-roster/build-tdd) and `templates/roles-matrix.md` + `templates/repo-layout.md` (human-readable). Generates per-role rules files at `rules/role-<key>.md`. Refuses success while any file in the repo is claimed by > 1 role.
+Adds `role` skill (Stage 1.3) — manages the role taxonomy (`planner`, `frontend`, `backend`, `ai`, `design`) with **responsibility-area separation** (SRP here means "clear lane boundaries", not "every file has exactly one owner"). The check is: for every top-level directory, does the configuration unambiguously say which role owns it? Two roles claiming the same `owns_paths` is ambiguous — must be resolved (pick one owner, split the directory, or move to `shared_write_paths` with PM sign-off). Cross-role reads via `shared_read_paths` are allowed and expected.
 
-Supports `monorepo` (default, single repo with role-owned subtrees) and `multi-repo` (one repo per role + shared `contracts/` repo) layouts. `multi-repo` is recommended only for projects that already have one repo per role.
+Writes both `.dev-kit/role-config.json` (machine-readable, consumed by plan/plan-update/team-roster/build-tdd) and `templates/roles-matrix.md` + `templates/repo-layout.md` (human-readable). Generates per-role rules files at `rules/role-<key>.md`. Each role carries a `boundary_notes` free-text field explaining where its responsibility ends.
 
-Upstream of `plan`, `plan-update`, `team-roster`, and `build-tdd` — those four must be re-invoked after any `role` change.
+Supports `monorepo` (default) and `multi-repo` layouts. Upstream of `plan`, `plan-update`, `team-roster`, and `build-tdd` — those four must be re-invoked after any `role` change.
 
 ## v0.1.2 (2026-09-01)
 
