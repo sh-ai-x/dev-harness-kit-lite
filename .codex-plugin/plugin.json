@@ -1,0 +1,8 @@
+{
+  "name": "dev-kit-lite",
+  "version": "0.1.0",
+  "description": "Mirror of .claude-plugin/plugin.json for Codex CLI.",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "commands": "./.codex/commands/"
+}

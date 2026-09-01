@@ -1,0 +1,45 @@
+# dev-kit-lite review — ADVISORY ONLY, never blocks merge
+#
+# Installed by /dev-kit-lite:ci-setup. This is the ONLY CI workflow the
+# lite kit installs. There is no ci.yml / lint.yml / test.yml / auto-fix.yml.
+# All build/lint/test logic lives in the local /dev-kit-lite:build-verify skill.
+#
+# continue-on-error: true → the check produces a green/red status, but
+# branch protection should mark it as advisory (not required) so merges
+# proceed even on red. Speed > gating.
+
+name: dev-kit-lite review (advisory)
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    continue-on-error: true   # ADVISORY: never blocks merge
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run /dev-kit-lite:review
+        uses: anthropics/claude-code-action@v1
+        with:
+          prompt: |
+            You are running /dev-kit-lite:review on this PR.
+
+            1. Read `PRD.md` (or `phases/<name>/step<N>.md` for the specific step this PR implements)
+            2. Read the diff: `git diff origin/main..HEAD`
+            3. Verify each AC mapped to this step is satisfied
+            4. Post the verdict as a PR comment (do NOT set a commit status)
+            5. The verdict is advisory only — do not request changes that block merge
+
+            Output format:
+              **Verdict:** Approve | Changes Requested | Blocked
+              **Evidence:** <file:line per AC>
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

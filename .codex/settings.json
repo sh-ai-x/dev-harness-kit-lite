@@ -1,0 +1,7 @@
+{
+  "hooks": "${CLAUDE_PLUGIN_ROOT}/hooks/hooks.json",
+  "rules": [
+    "rules/git-workflow.md",
+    "rules/team-collab.md"
+  ]
+}

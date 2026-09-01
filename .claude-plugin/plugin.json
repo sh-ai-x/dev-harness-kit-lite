@@ -1,0 +1,13 @@
+{
+  "name": "dev-kit-lite",
+  "version": "0.1.0",
+  "description": "4-hour MVP/POC team-collab plugin — 7 skills, 7 hooks, 6 stages. Pruned from dev-harness-kit.",
+  "author": {
+    "name": "dev-kit-lite maintainers"
+  },
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "commands": "./.claude/commands/",
+  "rules": "./rules/",
+  "mcpServers": {}
+}

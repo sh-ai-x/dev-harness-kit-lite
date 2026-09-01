@@ -1,0 +1,28 @@
+{
+  "hooks": "${CLAUDE_PLUGIN_ROOT}/hooks/hooks.json",
+  "rules": [
+    "rules/git-workflow.md",
+    "rules/team-collab.md",
+    "rules/role-pm-coordinator.md",
+    "rules/role-frontend.md",
+    "rules/role-backend.md",
+    "rules/role-figma-mcp.md"
+  ],
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Glob(**)",
+      "Grep(**)",
+      "Bash(git worktree **)",
+      "Bash(git status)",
+      "Bash(git diff **)",
+      "Bash(git log **)",
+      "Bash(npm test **)",
+      "Bash(npm run build **)",
+      "Bash(npm run lint **)",
+      "Bash(pytest **)",
+      "Bash(mypy **)",
+      "Bash(ruff **)"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "phase": "mvp-v0",
+  "generated_at": "2026-09-01T18:00:00Z",
+  "steps": [
+    {
+      "n": 1,
+      "title": "Frontend checkout form skeleton",
+      "role": "FE",
+      "owner": "alice",
+      "branch": "feat/web-alice-checkout",
+      "worktree": ".worktrees/web-alice",
+      "acs": ["AC-1"],
+      "status": "pending"
+    },
+    {
+      "n": 2,
+      "title": "Backend checkout API",
+      "role": "BE",
+      "owner": "carol",
+      "branch": "feat/api-carol-checkout",
+      "worktree": ".worktrees/api-carol",
+      "acs": ["AC-2"],
+      "status": "pending"
+    },
+    {
+      "n": 3,
+      "title": "Design tokens dump",
+      "role": "Design",
+      "owner": "eve",
+      "branch": "feat/design-eve-tokens",
+      "worktree": ".worktrees/design-eve",
+      "acs": ["AC-3"],
+      "status": "pending"
+    }
+  ]
+}
