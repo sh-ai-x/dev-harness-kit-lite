@@ -4,16 +4,36 @@
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.sh", "fail_closed": true},
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/tdd-guard.sh", "fail_closed": true},
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh", "fail_closed": true}
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.sh",
+            "fail_closed": true
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/tdd-guard.sh",
+            "fail_closed": true
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh",
+            "fail_closed": true
+          }
         ]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/git-guard.sh", "fail_closed": true},
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh", "fail_closed": true}
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/git-guard.sh",
+            "fail_closed": true
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh",
+            "fail_closed": true
+          }
         ]
       }
     ],
@@ -21,21 +41,22 @@
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/secret-scan.sh", "fail_closed": true}
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start-check.sh", "fail_closed": false}
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/secret-scan.sh",
+            "fail_closed": true
+          }
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          {"type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/stop-verify.sh", "fail_closed": true}
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/stop-verify.sh",
+            "fail_closed": true
+          }
         ]
       }
     ]
