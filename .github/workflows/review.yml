@@ -7,6 +7,9 @@
 # continue-on-error: true → the check produces a green/red status, but
 # branch protection should mark it as advisory (not required) so merges
 # proceed even on red. Speed > gating.
+#
+# Provider: MiniMax (via Anthropic-compatible endpoint at api.minimax.io).
+# Requires `id-token: write` for the action's OIDC token fetch.
 
 name: dev-kit-lite review (advisory)
 
@@ -21,6 +24,10 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: write
+      id-token: write
+    env:
+      MINIMAX_BASE_URL: https://api.minimax.io/anthropic
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +36,7 @@ jobs:
       - name: Run /dev-kit-lite:review
         uses: anthropics/claude-code-action@v1
         with:
+          anthropic_oidc_audience: anthropic
           prompt: |
             You are running /dev-kit-lite:review on this PR.
 
@@ -42,4 +50,6 @@ jobs:
               **Verdict:** Approve | Changes Requested | Blocked
               **Evidence:** <file:line per AC>
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_BASE_URL: ${{ env.MINIMAX_BASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.MINIMAX_API_KEY }}

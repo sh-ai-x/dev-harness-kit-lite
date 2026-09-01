@@ -1,6 +1,6 @@
 # Hook matrix — dev-harness-kit-lite
 
-7 hooks wired across 4 events. **fail_closed = true** means non-zero exit denies the tool call.
+6 hooks wired across 3 events. **fail_closed = true** means non-zero exit denies the tool call.
 
 | Event | Matcher | Hook | fail_closed | Enforces |
 |-------|---------|------|-------------|----------|
@@ -10,10 +10,8 @@
 | PreToolUse | Bash | git-guard.sh | true | L2 (no push to main, no --force) |
 | PreToolUse | Bash | destructive-confirm.sh | true | (confirm dangerous bash) |
 | PostToolUse | Write\|Edit\|MultiEdit | secret-scan.sh | true | (block credential patterns) |
-| SessionStart | (all) | session-start-check.sh | false | (gentle nudge on main) |
 | Stop | (all) | stop-verify.sh | true | L3 (no done without verify) |
 
-**fail_closed=true**: 6 hooks (deny on non-zero exit).
-**fail_closed=false**: 1 hook (session-start-check; advisory only).
+**fail_closed=true**: 7 hooks (deny on non-zero exit). The destructive-confirm.sh script is registered for both Write and Bash events.
 
-Full-kit comparison: 32 hooks → 7 hooks (78% reduction).
+Full-kit comparison: 32 hooks → 6 hooks (81% reduction).
