@@ -3,12 +3,13 @@
   "name": "dev-kit-lite",
   "owner": {
     "name": "sanghee",
-    "url": "https://github.com/sanghee"
+    "url": "https://github.com/sh-ai-x"
   },
   "plugins": [
     {
       "name": "dev-kit-lite",
-      "description": "4-hour MVP/POC team-collab plugin — 8 skills, 7 hooks, 6 stages. Pruned from dev-harness-kit for greenfield sprints. L5-R non-overlap (one person = one in-flight step), advisory-only review.yml, mandatory PM/coordinator role.",
+      "displayName": "Dev Harness Kit Lite",
+      "description": "4-hour MVP/POC team-collab plugin — 11 skills, 6 hooks, 8 stages. Layout-agnostic migration for existing projects. L5-R non-overlap (one person = one in-flight step), advisory-only review.yml, mandatory PM/coordinator role, dependency-aware plan splits.",
       "version": "0.1.0",
       "source": {
         "source": "url",
@@ -16,7 +17,17 @@
         "ref": "main"
       },
       "category": "development",
-      "tags": ["mvp", "poc", "team-collab", "tdd", "worktree", "vite-lite"]
+      "tags": [
+        "mvp",
+        "poc",
+        "team-collab",
+        "tdd",
+        "worktree",
+        "l5-r",
+        "non-overlap",
+        "dev-kit-lite",
+        "ai-native"
+      ]
     }
   ]
 }
