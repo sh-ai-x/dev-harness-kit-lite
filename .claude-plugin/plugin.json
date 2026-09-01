@@ -22,7 +22,6 @@
     "ai-native"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks.json",
   "commands": "./.claude/commands/",
   "rules": "./rules/"
 }
