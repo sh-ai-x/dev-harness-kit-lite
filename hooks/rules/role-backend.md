@@ -42,7 +42,7 @@
 - Daily standup: every 30 min, append status to `.dev-kit/session-log.md`
 
 ## Forbidden
-- Editing `apps/web/`, `components/`, `hooks/` (frontend territory — project-root `hooks/` is app code, not the kit's `.dev-kit/hooks/`)
+- Editing `apps/web/`, `components/`, `hooks/` (frontend territory)
 - Editing `design/`, `tokens/` (use frontend hand-off)
 - Pushing to main (L2)
 - Skipping TDD RED phase (L1)

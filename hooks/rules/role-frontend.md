@@ -6,7 +6,7 @@
 ## Owns
 - `apps/web/` (Next.js app router)
 - `components/` (shared React components)
-- `hooks/` (custom React hooks — the kit never writes here; its own hook scripts live in `.dev-kit/hooks/`)
+- `hooks/` (custom React hooks)
 - `styles/` (CSS modules / Tailwind config)
 - `public/` (static assets)
 - `package.json`, `tsconfig.json`, `next.config.js` (frontend-side)

@@ -1,0 +1,59 @@
+{
+  "phase": "mvp-v0",
+  "generated_at": "2026-09-01T18:00:00Z",
+  "owners": {
+    "alice": {
+      "role": "frontend",
+      "active_step": null,
+      "branch": "feat/web-alice-checkout",
+      "worktree": ".worktrees/web-alice",
+      "owns_paths": ["apps/web/checkout/", "components/CheckoutForm.tsx"],
+      "started_at": null
+    },
+    "bob": {
+      "role": "frontend",
+      "active_step": null,
+      "branch": "feat/web-bob-list",
+      "worktree": ".worktrees/web-bob",
+      "owns_paths": ["apps/web/list/", "components/ItemList.tsx"],
+      "started_at": null
+    },
+    "carol": {
+      "role": "backend",
+      "active_step": null,
+      "branch": "feat/api-carol-checkout",
+      "worktree": ".worktrees/api-carol",
+      "owns_paths": ["api/checkout/", "services/payment.py"],
+      "started_at": null
+    },
+    "dave": {
+      "role": "backend",
+      "active_step": null,
+      "branch": "feat/api-dave-models",
+      "worktree": ".worktrees/api-dave",
+      "owns_paths": ["models/", "tests/test_models.py"],
+      "started_at": null
+    },
+    "eve": {
+      "role": "design",
+      "active_step": null,
+      "branch": "feat/design-eve-tokens",
+      "worktree": ".worktrees/design-eve",
+      "owns_paths": ["design/", "tokens/", "screenshots/"],
+      "started_at": null
+    }
+  },
+  "path_locks": {
+    "apps/web/checkout/": "alice",
+    "components/CheckoutForm.tsx": "alice",
+    "apps/web/list/": "bob",
+    "components/ItemList.tsx": "bob",
+    "api/checkout/": "carol",
+    "services/payment.py": "carol",
+    "models/": "dave",
+    "tests/test_models.py": "dave",
+    "design/": "eve",
+    "tokens/": "eve",
+    "screenshots/": "eve"
+  }
+}

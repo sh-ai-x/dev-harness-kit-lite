@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.1.6 (2026-09-02)
+
+**Breaking (install path):** the kit's operational hook scripts now install to
+`.dev-kit/hooks/` in adopting projects instead of project-root `hooks/`, which
+collides with the React/Next.js/Vue convention for custom hooks
+(`hooks/useAuth.ts`) — and with the kit's own `role-frontend` rule that assigns
+`hooks/` to the frontend role. Project-root `hooks/` is now never written to by
+the kit. Updated: `bin/install.sh`, `skills/bootstrap` Step 1 verify,
+`skills/migrate` Step 6 coexistence table + Phase 3–5 install paths,
+`rules/git-workflow.md`, `rules/role-frontend.md`, `rules/role-backend.md`.
+The installer also rewrites `${CLAUDE_PLUGIN_ROOT}/hooks/` → `${CLAUDE_PLUGIN_ROOT}/.dev-kit/hooks/`
+in the copied `.claude/settings.json`, `.codex/settings.json`, and `hooks.json`.
+
+The kit repo's own `hooks/hooks.json` + `hooks/*.sh` layout is unchanged (plugin
+auto-load convention).
+
+**Migration** for projects already bootstrapped/migrated:
+
+```bash
+mkdir -p .dev-kit/hooks && git mv hooks/* .dev-kit/hooks/ && rmdir hooks
+sed -i '' 's#/hooks/#/.dev-kit/hooks/#g' .claude/settings.json .codex/settings.json .dev-kit/hooks/hooks.json
+```
+
+`.dev-kit/.active-hooks.json` needs no change — it lists bare script names.
+
 ## v0.1.5 (2026-09-01)
 
 Adds two role-scoped skills for daily-driver work:
