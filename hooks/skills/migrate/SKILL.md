@@ -134,8 +134,7 @@ Print which dev-kit-lite files would overlap with existing ones:
 | `CLAUDE.md` | exists | backup to `CLAUDE.md.bak-<ts>`, append role rules |
 | `AGENTS.md` | exists | same |
 | `.claude/settings.json` | exists | merge allow-list, do not overwrite |
-| `.dev-kit/hooks/worktree-guard.sh` | absent | install |
-| `hooks/` (project root) | may exist (React/Vue custom hooks) | never touched by the kit |
+| `hooks/worktree-guard.sh` | absent | install |
 | `.dev-kit/` | exists (partial) | preserve, add what's missing |
 
 For each repo the team uses (detected in Step 1), do this.
@@ -160,22 +159,22 @@ Phased adoption — never overwrite on day one:
 
 #### Phase 3 (day 2-3): L5-R hooks opt-in
 
-- Install `.dev-kit/hooks/worktree-guard.sh` (L2 enforcement)
-- Install `.dev-kit/hooks/git-guard.sh` (L2 enforcement)
+- Install `hooks/worktree-guard.sh` (L2 enforcement)
+- Install `hooks/git-guard.sh` (L2 enforcement)
 - Do NOT install tdd-guard or destructive-confirm yet (those need team training)
 - For each repo the team uses (detected): install per-repo, with shared config in the contracts/ location
 
 #### Phase 4 (day 3-5): Rules + L1/L3 hooks
 
 - Generate `rules/role-<key>.md` per role
-- Install `.dev-kit/hooks/tdd-guard.sh` (L1)
-- Install `.dev-kit/hooks/stop-verify.sh` (L3)
+- Install `hooks/tdd-guard.sh` (L1)
+- Install `hooks/stop-verify.sh` (L3)
 - Update AGENTS.md / CLAUDE.md (append, do not overwrite)
 
 #### Phase 5 (week 2): Full adoption
 
-- `.dev-kit/hooks/secret-scan.sh`
-- `.dev-kit/hooks/destructive-confirm.sh`
+- `hooks/secret-scan.sh`
+- `hooks/destructive-confirm.sh`
 - Switch review workflow provider (optional, e.g., to MiniMax via this kit's CI template)
 
 The skill prints this plan and the user picks where to stop.

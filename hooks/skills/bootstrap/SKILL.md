@@ -18,7 +18,7 @@ Idempotent. Safe to re-run. Verifies the lite kit is wired correctly.
 ## Step 1 — Verify kit
 
 ```bash
-test -f CLAUDE.md && test -L AGENTS.md && test -d .dev-kit/hooks/ && test -d skills/ && test -d rules/ && test -d iron-laws/
+test -f CLAUDE.md && test -L AGENTS.md && test -d hooks/ && test -d skills/ && test -d rules/ && test -d iron-laws/
 ```
 
 Exit 0 = wired. Exit 1 = missing file.

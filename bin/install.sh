@@ -45,11 +45,26 @@ mkdir -p "$TARGET"
 
 # Copy files (preserve structure)
 for entry in CLAUDE.md AGENTS.md README.md CHANGELOG.md .gitignore \
-             iron-laws rules skills templates hooks lib tests \
+             iron-laws rules skills templates lib tests \
              .claude-plugin .codex-plugin .claude .codex; do
   if [ -e "$KIT_ROOT/$entry" ]; then
     cp -R "$KIT_ROOT/$entry" "$TARGET/$entry"
   fi
+done
+
+# The kit's operational hook scripts install under .dev-kit/hooks/ in the
+# adopting project. Project-root hooks/ is reserved for the app's own custom
+# hooks (React/Vue composables) and is never written to by the kit.
+mkdir -p "$TARGET/.dev-kit"
+rm -rf "$TARGET/.dev-kit/hooks"
+cp -R "$KIT_ROOT/hooks" "$TARGET/.dev-kit/hooks"
+
+# Re-point plugin-root-relative hook paths at the namespaced location
+for cfg in "$TARGET/.claude/settings.json" "$TARGET/.codex/settings.json" \
+           "$TARGET/.dev-kit/hooks/hooks.json"; do
+  [ -f "$cfg" ] || continue
+  sed -i.bak 's#${CLAUDE_PLUGIN_ROOT}/hooks/#${CLAUDE_PLUGIN_ROOT}/.dev-kit/hooks/#g' "$cfg"
+  rm -f "$cfg.bak"
 done
 
 # Re-create AGENTS.md as a symlink (cp -R preserves the source as a file)

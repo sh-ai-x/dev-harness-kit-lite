@@ -1,0 +1,13 @@
+# dev-harness-kit-lite runtime state — gitignored
+
+.dev-kit/hand-off/
+.dev-kit/verify/
+.dev-kit/.tdd-cycle.json
+.dev-kit/.active-hooks.json
+.dev-kit/.owner-check.json
+.worktrees/
+*.pyc
+__pycache__/
+.venv/
+node_modules/
+.DS_Store

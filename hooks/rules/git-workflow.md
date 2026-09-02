@@ -2,7 +2,6 @@
 paths:
   - ".claude/**"
   - "hooks/**"
-  - ".dev-kit/hooks/**"
   - "docs/adr/ADR-00**-*.md"
   - "tests/test_git_workflow.py"
   - "tests/test_worktree_guard.py"
@@ -17,16 +16,6 @@ that remain readable but must not be used for new worktrees.
 
 These rules apply to every code change — feature, fix, refactor, docs, test, chore.
 Violation = rejected by `git-guard` hook at commit/push time.
-
-## Hook script location
-
-Inside this kit repo the hook scripts live at `hooks/` — required by the
-Claude Code / Codex plugin auto-load convention (`hooks/hooks.json` relative to
-plugin root). In an **adopting project** those same scripts install to
-`.dev-kit/hooks/`. Project-root `hooks/` is reserved for the app's own custom
-hooks (React/Vue) and is never written to by the kit. Paths named `hooks/...`
-below refer to the kit-repo layout; read them as `.dev-kit/hooks/...` when
-working inside an adopting project.
 
 ## Iron Laws (read first)
 
