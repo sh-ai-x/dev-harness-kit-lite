@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at": "2026-09-03T00:00:00+00:00",
+  "tdd_guard_enabled": true,
+  "main_push_block_enabled": true,
+  "notes": [
+    "tdd_guard_enabled       → tdd-guard.sh exits 0 when false (RED-before-prod rule off).",
+    "main_push_block_enabled → git-guard.sh stops denying 'git push ... main' / 'git commit on main' when false. force-push, gh pr merge, and branch -D main remain enforced.",
+    "Both default to true so out-of-the-box the kit is strict. Toggle via /dev-kit-lite:setup-guard.",
+    "fail_closed semantics of the hook itself are preserved — only the rule is skipped, never the hook wiring."
+  ]
+}

@@ -20,6 +20,20 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 2
 fi
 
+# m6: respect .dev-kit/.guard-config.json — tdd_guard_enabled=false → bypass.
+# fail_closed wiring stays intact; only the L1 rule is skipped. toggle via
+# /dev-kit-lite:setup-guard.
+# NOTE: jq's `//` alternative fires on null OR false (unlike most langs), so
+# `// true` would return true even when the field is explicitly false. Use
+# has() to default only when the key is missing.
+GUARD_CONFIG=".dev-kit/.guard-config.json"
+if [ -f "$GUARD_CONFIG" ]; then
+  TDD_ENABLED="$(jq -r 'if has("tdd_guard_enabled") then .tdd_guard_enabled else true end' "$GUARD_CONFIG" 2>/dev/null)"
+  if [ "$TDD_ENABLED" = "false" ]; then
+    exit 0
+  fi
+fi
+
 FILE_PATH="$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // ""' 2>/dev/null)"
 [ -z "$FILE_PATH" ] && exit 0
 

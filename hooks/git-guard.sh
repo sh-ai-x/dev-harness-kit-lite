@@ -61,6 +61,19 @@ case "$CMD" in
   *) exit 0 ;;
 esac
 
+# m7: respect .dev-kit/.guard-config.json — main_push_block_enabled=false
+# → skip the main-branch push/commit blocks (sections 1-3 below still fire
+# for force-push / gh pr merge / branch -D main, which are NOT part of the
+# toggle). toggle via /dev-kit-lite:setup-guard.
+# NOTE: jq's `//` fires on null OR false, so `// true` returns true even when
+# the field is explicitly false. has() defaults only when the key is missing.
+GUARD_CONFIG=".dev-kit/.guard-config.json"
+MAIN_PUSH_BLOCK_ENABLED="true"
+if [ -f "$GUARD_CONFIG" ]; then
+  MAIN_PUSH_BLOCK_ENABLED="$(jq -r 'if has("main_push_block_enabled") then .main_push_block_enabled else true end' "$GUARD_CONFIG" 2>/dev/null)"
+  [ -z "$MAIN_PUSH_BLOCK_ENABLED" ] && MAIN_PUSH_BLOCK_ENABLED="true"
+fi
+
 # 0. Block `gh pr merge` (any invocation, any flags) — merging into main
 # is always a human action. Checked before the git-only filter below so
 # a bare `gh pr merge ...` (no "git " substring) still gets caught. Both
@@ -146,7 +159,9 @@ fi
 if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+commit'; then
   CUR=$(current_branch)
   if [ "$CUR" = "main" ] || [ "$CUR" = "master" ]; then
-    deny "GIT GUARD" "direct commit to '$CUR' is forbidden. Cut a branch off origin/main first (see .claude/rules/git-workflow.md)."
+    if [ "$MAIN_PUSH_BLOCK_ENABLED" = "true" ]; then
+      deny "GIT GUARD" "direct commit to '$CUR' is forbidden. Cut a branch off origin/main first (see .claude/rules/git-workflow.md)."
+    fi
   fi
 fi
 
@@ -157,11 +172,15 @@ if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+push'; then
   # `git push origin +main`, `git push --force origin main`,
   # `git push origin main:master`, `git -C /repo push origin main`.
   if printf '%s' "$CMD" | grep -qE '(^|[[:space:]:/])(origin[[:space:]]+)?(\+)?(HEAD:)?(main|master)([[:space:]:/.]|$)|:main\b|:master\b'; then
-    deny "GIT GUARD" "pushing to main is forbidden. Push to your feature branch: \`git push -u origin <type>/<slug>\`."
+    if [ "$MAIN_PUSH_BLOCK_ENABLED" = "true" ]; then
+      deny "GIT GUARD" "pushing to main is forbidden. Push to your feature branch: \`git push -u origin <type>/<slug>\`."
+    fi
   fi
   # Block force-push. m5: bash-guard.sh only blocks force-push in strict mode
   # (DEV_KIT_STRICT=1) and only the `force+main` pattern — git-guard is the
   # only always-on block, so this check is the primary one.
+  # NOTE: not gated by main_push_block_enabled — force-push protection is
+  # independent of the main-branch push toggle and stays enforced regardless.
   if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+push.*[[:space:]](-f|--force|--force-with-lease)([[:space:]]|$)'; then
     if printf '%s' "$CMD" | grep -qE -- '--force-with-lease'; then
       # --force-with-lease is allowed on your own unmerged branch; only block
@@ -184,7 +203,9 @@ if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+(checkout|switch)[[:space:]]'; 
      || printf '%s' "$CMD" | grep -qE 'git[[:space:]]+(checkout|switch)[[:space:]]+[^[:space:]]+[[:space:]]+--([[:space:]]|$)'; then
     :
   elif printf '%s' "$CMD" | grep -qE 'git[[:space:]]+(checkout|switch)[[:space:]]+(main|master)([[:space:]]|$)'; then
-    deny "GIT GUARD" "switching to main in this checkout is forbidden. Use a worktree instead: \`git worktree add -b <type>/<slug> .worktrees/<slug> origin/main\`."
+    if [ "$MAIN_PUSH_BLOCK_ENABLED" = "true" ]; then
+      deny "GIT GUARD" "switching to main in this checkout is forbidden. Use a worktree instead: \`git worktree add -b <type>/<slug> .worktrees/<slug> origin/main\`."
+    fi
   fi
 fi
 
