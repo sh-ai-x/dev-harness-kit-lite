@@ -1,11 +1,12 @@
 # Skills — dev-kit-lite
 
-13 skills for 4-hour MVP/POC team sprints.
+14 skills for 4-hour MVP/POC team sprints.
 
 | Skill | Stage | Purpose |
 |-------|-------|---------|
 | `/dev-kit-lite:idea-eval` | 0 | Score an idea on 8 axes (100 pts) — pre-sprint gate before `plan` |
 | `/dev-kit-lite:bootstrap` | 1 | Scaffold CLAUDE.md + AGENTS.md + .active-hooks.json + first commit (greenfield) |
+| `/dev-kit-lite:setup-guard` | 1.1 | Toggle TDD guard (L1) + main-push block (L2) on/off via `.dev-kit/.guard-config.json`. Status query reads both flags. |
 | `/dev-kit-lite:role` | 1.3 | Manage role taxonomy (planner/frontend/backend/ai/design) with responsibility-area separation + tech-stack-agnostic presets |
 | `/dev-kit-lite:migrate` | 1.4 | Adopt dev-kit-lite into an EXISTING project. Layout-agnostic — same skill for one repo, workspace, or multi-repo. |
 | `/dev-kit-lite:team-roster` | 1.5 | Define team roster (role + identifier + name) and split steps by dependency graph |
