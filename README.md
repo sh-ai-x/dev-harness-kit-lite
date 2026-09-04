@@ -139,13 +139,14 @@ idea-eval  -> bootstrap  ->  role  ->  plan    -> ci-setup -> build-tdd -> revie
                      \-> team-roster (Stage 1.5, after role)
                      \-> role-plan (Stage 1.6, after team-roster)
                      \-> role-tdd (Stage 4a, role-owner variant of build-tdd)
+                     \-> proposal (Stage 2c, optional before/after design doc, after plan)
 
 Cross-cutting (anytime):
   - reassign       (PM-only ownership transfer)
   - plan-update    (PM-only PRD mutation)
 ```
 
-The 14 skills by stage:
+The 15 skills by stage:
 
 | Stage | Skill | Who runs it | What it writes |
 |-------|-------|-------------|----------------|
@@ -158,6 +159,7 @@ The 14 skills by stage:
 | 1.6 | `/dev-kit-lite:role-plan` | PM | Per-role plan docs, each scoped to one role's assigned steps |
 | 2 | `/dev-kit-lite:plan` | PM | `PRD.md`, `phases/<name>/step<N>.md`, `owners.json` |
 | 2b | `/dev-kit-lite:plan-update` | PM (mid-sprint) | Mutates PRD or steps; may trigger reassign |
+| 2c | `/dev-kit-lite:proposal` | PM (optional) | `docs/proposals/<bucket>/<main>/<sub>.html` — self-contained before/after design doc for reviewers |
 | 3 | `/dev-kit-lite:ci-setup` | PM (opt-in) | `.github/workflows/review.yml` (advisory only) |
 | 4a | `/dev-kit-lite:role-tdd` | Role-owner | Role-scoped Red-Green-Refactor, auto-scoped to one identifier |
 | 4b | `/dev-kit-lite:build-tdd` | Role-owner / PM | Failing test, then code, then refactor (PM/orchestrator variant) |
