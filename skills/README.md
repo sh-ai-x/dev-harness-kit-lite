@@ -1,6 +1,6 @@
 # Skills — dev-kit-lite
 
-14 skills for 4-hour MVP/POC team sprints.
+15 skills for 4-hour MVP/POC team sprints.
 
 | Skill | Stage | Purpose |
 |-------|-------|---------|
@@ -13,6 +13,7 @@
 | `/dev-kit-lite:role-plan` | 1.6 | Generate per-role plan docs from the project plan. Each role gets a focused doc with only their assigned steps. |
 | `/dev-kit-lite:plan` | 2 | Write PRD.md + phases/<name>/ + owners.json (initial assignment) |
 | `/dev-kit-lite:plan-update` | 2b | PM-only mid-sprint PRD/phases mutation |
+| `/dev-kit-lite:proposal` | 2c | Render docs/proposals/<bucket>/<main>/<sub>.yaml to a self-contained before/after HTML doc for pre-implementation review |
 | `/dev-kit-lite:ci-setup` | 3 | Install ONE file: .github/workflows/review.yml (advisory-only) |
 | `/dev-kit-lite:role-tdd` | 4a | Role-scoped TDD — Red-Green-Refactor on ONLY the calling role-owner's assigned steps |
 | `/dev-kit-lite:build-tdd` | 4b | Full Red-Green-Refactor cycle + L5-R non-overlap pre-flight (PM/orchestrator variant) |

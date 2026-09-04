@@ -9,7 +9,7 @@
     {
       "name": "dev-kit-lite",
       "displayName": "Dev Harness Kit Lite",
-      "description": "4-hour MVP/POC team-collab plugin — 11 skills, 6 hooks, 8 stages. Layout-agnostic migration for existing projects. L5-R non-overlap (one person = one in-flight step), advisory-only review.yml, mandatory PM/coordinator role, dependency-aware plan splits.",
+      "description": "4-hour MVP/POC team-collab plugin — 15 skills, 6 hooks, 8 stages. Layout-agnostic migration for existing projects. L5-R non-overlap (one person = one in-flight step), advisory-only review.yml, mandatory PM/coordinator role, dependency-aware plan splits.",
       "version": "0.1.0",
       "source": {
         "source": "url",
