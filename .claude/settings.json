@@ -1,4 +1,8 @@
 {
+  "enabledPlugins": {
+    "dev-kit-lite@dev-kit-lite": true,
+    "dev-kit@dev-kit": false
+  },
   "hooks": "${CLAUDE_PLUGIN_ROOT}/hooks/hooks.json",
   "rules": [
     "rules/git-workflow.md",

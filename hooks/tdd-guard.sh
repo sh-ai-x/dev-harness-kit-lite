@@ -44,6 +44,18 @@ case "$FILE_PATH" in
     ;;
 esac
 
+# Harness/guard config files always allowed (any phase). These are plain
+# data files with no associated test suite — gating them behind RED/GREEN
+# evidence creates a chicken-and-egg problem (the guard-config bypass file
+# itself becomes unreachable without first satisfying the guard it exists
+# to bypass) and forces contributors to script around this hook via raw
+# Bash file writes instead of the Write/Edit tools. See issue #15.
+case "$FILE_PATH" in
+  */.dev-kit/.guard-config.json|.dev-kit/.guard-config.json|*/.claude/settings.json|.claude/settings.json|*/.claude/settings.local.json|.claude/settings.local.json)
+    exit 0
+    ;;
+esac
+
 # Read TDD cycle state
 TDD_JSON=".dev-kit/.tdd-cycle.json"
 PHASE=""
