@@ -132,29 +132,35 @@ That is the four-skill minimum. The PM runs `plan` and `build-verify`. Each role
 When you want the full kit — including idea scoring, role taxonomy, team roster, and review — the 8 stages look like this:
 
 ```
-Stage 0       Stage 1                 Stage 2     Stage 3    Stage 4    Stage 5     Stage 6
+Stage 0       Stage 1                       Stage 2     Stage 3    Stage 4       Stage 5     Stage 6
 idea-eval  -> bootstrap  ->  role  ->  plan    -> ci-setup -> build-tdd -> review -> build-verify
                      \-> migrate (existing projects instead of bootstrap)
+                     \-> setup-guard (Stage 1.1, optional — toggle TDD/main-push guards)
                      \-> team-roster (Stage 1.5, after role)
+                     \-> role-plan (Stage 1.6, after team-roster)
+                     \-> role-tdd (Stage 4a, role-owner variant of build-tdd)
 
 Cross-cutting (anytime):
   - reassign       (PM-only ownership transfer)
   - plan-update    (PM-only PRD mutation)
 ```
 
-The 11 skills by stage:
+The 14 skills by stage:
 
 | Stage | Skill | Who runs it | What it writes |
 |-------|-------|-------------|----------------|
 | 0 | `/dev-kit-lite:idea-eval` | PM (optional) | `.dev-kit/idea-eval/<slug>.md` with an S/A/B/C/D grade |
 | 1 | `/dev-kit-lite:bootstrap` | PM | `CLAUDE.md`, `AGENTS.md`, `.dev-kit/.active-hooks.json`, first commit |
+| 1.1 | `/dev-kit-lite:setup-guard` | PM (optional) | Toggles `tdd_guard_enabled` / `main_push_block_enabled` in `.dev-kit/.guard-config.json` |
 | 1.3 | `/dev-kit-lite:role` | PM | Role taxonomy + tech-stack presets |
 | 1.4 | `/dev-kit-lite:migrate` | PM (existing project) | `role-config.json`, coexistence report, 5-phase plan |
 | 1.5 | `/dev-kit-lite:team-roster` | PM | `phases/<name>/owners.json` with per-role identifier + name |
+| 1.6 | `/dev-kit-lite:role-plan` | PM | Per-role plan docs, each scoped to one role's assigned steps |
 | 2 | `/dev-kit-lite:plan` | PM | `PRD.md`, `phases/<name>/step<N>.md`, `owners.json` |
 | 2b | `/dev-kit-lite:plan-update` | PM (mid-sprint) | Mutates PRD or steps; may trigger reassign |
 | 3 | `/dev-kit-lite:ci-setup` | PM (opt-in) | `.github/workflows/review.yml` (advisory only) |
-| 4 | `/dev-kit-lite:build-tdd` | Role-owner | Failing test, then code, then refactor |
+| 4a | `/dev-kit-lite:role-tdd` | Role-owner | Role-scoped Red-Green-Refactor, auto-scoped to one identifier |
+| 4b | `/dev-kit-lite:build-tdd` | Role-owner / PM | Failing test, then code, then refactor (PM/orchestrator variant) |
 | 5 | `/dev-kit-lite:review` | Reviewer | `docs/review/<step>.md` verdict |
 | 6 | `/dev-kit-lite:build-verify` | PM | `.dev-kit/verify/<step>.json`, releases owner lock |
 | (cross) | `/dev-kit-lite:reassign` | PM | Updates `owners.json` + step's `## Role` |
