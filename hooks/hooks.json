@@ -1,39 +1,20 @@
 {
+  "_doc": "Claude-Code-side hook wiring. Mirror in .codex/hooks.json (Codex CLI). Both files invoke the same scripts under hooks/ with DEV_KIT_AGENT=<runtime> so log/audit paths can attribute work to the active runtime. See .codex/README.md for the dual-runtime contract.",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.sh",
-            "fail_closed": true
-          },
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/tdd-guard.sh",
-            "fail_closed": true
-          },
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh",
-            "fail_closed": true
-          }
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.sh", "fail_closed": true},
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/tdd-guard.sh", "fail_closed": true},
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh", "fail_closed": true}
         ]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/git-guard.sh",
-            "fail_closed": true
-          },
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh",
-            "fail_closed": true
-          }
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/git-guard.sh", "fail_closed": true},
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh", "fail_closed": true}
         ]
       }
     ],
@@ -41,22 +22,21 @@
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/secret-scan.sh",
-            "fail_closed": true
-          }
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/secret-scan.sh", "fail_closed": true}
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start-check.sh", "fail_closed": false}
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/stop-verify.sh",
-            "fail_closed": true
-          }
+          {"type": "command", "command": "DEV_KIT_AGENT=claude-code bash ${CLAUDE_PLUGIN_ROOT}/hooks/stop-verify.sh", "fail_closed": true}
         ]
       }
     ]

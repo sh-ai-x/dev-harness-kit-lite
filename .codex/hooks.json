@@ -1,0 +1,44 @@
+{
+  "_doc": "Codex-CLI-side hook wiring. Mirror of hooks/hooks.json (Claude Code). Same scripts, same fail-closed semantics, different runtime tag (DEV_KIT_AGENT=codex). Enforces the same .worktree/ rule on Codex sessions: any Edit/Write in the main checkout is denied; spawn or cd into a .worktrees/<slug>/ first. Paths use ${CLAUDE_PLUGIN_ROOT}/hooks/ so install.sh sed can rewrite to .dev-kit/hooks/ alongside the Claude side.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/worktree-guard.sh"},
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/tdd-guard.sh"},
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh"}
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/git-guard.sh"},
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-confirm.sh"}
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/secret-scan.sh"}
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start-check.sh"}
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {"type": "command", "command": "DEV_KIT_AGENT=codex bash ${CLAUDE_PLUGIN_ROOT}/hooks/stop-verify.sh"}
+        ]
+      }
+    ]
+  }
+}

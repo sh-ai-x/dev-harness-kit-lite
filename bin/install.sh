@@ -59,9 +59,11 @@ mkdir -p "$TARGET/.dev-kit"
 rm -rf "$TARGET/.dev-kit/hooks"
 cp -R "$KIT_ROOT/hooks" "$TARGET/.dev-kit/hooks"
 
-# Re-point plugin-root-relative hook paths at the namespaced location
+# Re-point plugin-root-relative hook paths at the namespaced location.
+# Includes .codex/hooks.json (Codex CLI mirror, v0.1.8) so the DEV_KIT_AGENT=codex
+# wiring gets rewritten alongside the Claude Code side.
 for cfg in "$TARGET/.claude/settings.json" "$TARGET/.codex/settings.json" \
-           "$TARGET/.dev-kit/hooks/hooks.json"; do
+           "$TARGET/.dev-kit/hooks/hooks.json" "$TARGET/.codex/hooks.json"; do
   [ -f "$cfg" ] || continue
   sed -i.bak 's#${CLAUDE_PLUGIN_ROOT}/hooks/#${CLAUDE_PLUGIN_ROOT}/.dev-kit/hooks/#g' "$cfg"
   rm -f "$cfg.bak"

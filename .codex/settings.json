@@ -1,4 +1,5 @@
 {
+  "_doc": "Codex CLI settings. Points at the shared hooks/hooks.json (same as Claude Code) so install.sh can rewrite both runtimes consistently via the ${CLAUDE_PLUGIN_ROOT}/hooks/ -> ${CLAUDE_PLUGIN_ROOT}/.dev-kit/hooks/ sed. The .codex/hooks.json file is the Codex-side mirror with DEV_KIT_AGENT=codex prefixes; install.sh rewrites it via the same sed loop.",
   "hooks": "${CLAUDE_PLUGIN_ROOT}/hooks/hooks.json",
   "rules": [
     "rules/git-workflow.md",

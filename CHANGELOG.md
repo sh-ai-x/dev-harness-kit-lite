@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.1.8 (2026-09-05)
+
+Mirrors the seven operational hooks to the Codex CLI runtime so the
+`.worktree/`-per-task rule and the rest of the L1–L5 iron laws fire
+identically on both runtimes. Pattern lifted from the upstream
+`dev-harness-kit` reference; lite only ships the minimal hook subset.
+
+- **`hooks/hooks.json`** — every bash command now prefixed with
+  `DEV_KIT_AGENT=claude-code` so downstream tooling can attribute
+  events to the active runtime. Same scripts, same `fail_closed`
+  semantics.
+- **`.codex/hooks.json`** (new) — Codex-CLI mirror of
+  `hooks/hooks.json`. Same hook scripts, same matcher/segment shape,
+  same `fail_closed` semantics; commands prefixed with
+  `DEV_KIT_AGENT=codex` and paths use `${CLAUDE_PLUGIN_ROOT}/hooks/`
+  (matching the Claude side) so install.sh can rewrite both runtimes
+  via the same sed loop.
+- **`bin/install.sh`** — the namespaced-path sed loop now also
+  rewrites `.codex/hooks.json` so the Codex wiring lands at
+  `.dev-kit/hooks/...` in the adopting project.
+- **`hooks/lib/hook-preamble.sh`** — exports `$DEV_KIT_AGENT` (default
+  `unknown`) so hook bodies and log lines can attribute work to the
+  active runtime. No behavioral change for hooks that don't read it.
+- **`.codex/README.md`** (new) — documents the dual-runtime contract:
+  shared scripts, distinct wiring, identical rule semantics.
+- **`CLAUDE.md`** — adds a one-paragraph "Worktree rule (Claude Code +
+  Codex)" pointer with a cross-link to `.codex/README.md`.
+
+The `.codex-plugin/plugin.json` and `.codex/commands/` forwarders
+already mirrored from the v0.1.x setup remain untouched.
+
 ## v0.1.7 (2026-09-05)
 
 Ports the worktree-prune workflow from dev-harness-kit so operators can

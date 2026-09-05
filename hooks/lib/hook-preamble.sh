@@ -37,6 +37,15 @@ fi
 set -uo pipefail
 INPUT="$(cat)"
 
+# Surface the active runtime tag for any hook body / downstream log line
+# that wants to attribute events to Claude Code vs Codex. The
+# per-runtime hooks.json entries set this env var (e.g.
+# `DEV_KIT_AGENT=claude-code bash ...`); the default keeps existing
+# behaviour when the var is unset (older hooks.json without the prefix).
+# Read-only here — every hook body can also re-export if it needs to
+# override (none do today).
+export DEV_KIT_AGENT="${DEV_KIT_AGENT:-unknown}"
+
 # Source the shared worktree-detection helper. `$WORKTREE_DETECT` will
 # be set by the worktree_detect call below; a "" value means jq is
 # missing (the hook body decides how to react). Use the POSIX-safe
