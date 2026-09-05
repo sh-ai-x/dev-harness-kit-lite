@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.1.7 (2026-09-05)
+
+Ports the worktree-prune workflow from dev-harness-kit so operators can
+manage the `.worktrees/` queue without leaving the kit:
+
+- **`bin/worktree-prune.sh`** — interactive oldest-first removal with
+  `--yes`, `--dry-run`, `--keep N`. Drives `lib/worktree_prune.py` for
+  porcelain parsing + age sort, then dispatches each path to
+  `bin/worktree-remove-safe.sh`. Pruned: drops the janitor-agent
+  cross-link and the per-worktree log archive (lite has no telemetry
+  retention requirement).
+- **`bin/worktree-remove-safe.sh`** — refuses to remove the main
+  checkout, verifies the path is a registered worktree, prompts for
+  confirmation unless `--yes` is passed, then forwards to
+  `git worktree remove`.
+- **`lib/worktree_prune.py`** — `collect(repo) -> list[Row]` (oldest
+  first) + `render_table(rows, now, head)` + CLI (`--table`,
+  `--count`, `--head`). 130 LOC; upstream was 197.
+- **Slash commands** — `.claude/commands/worktree-prune.md` (Claude
+  Code) + `.codex/commands/worktree-prune.md` (Codex). Both forward
+  to `bin/worktree-prune.sh` with `$ARGUMENTS`.
+- **`tests/test_worktree_prune.py`** — 18 hermetic tests covering
+  `Row.age_days`, `_porcelain_blocks`, `render_table`, `collect` (main
+  exclusion + detached exclusion + oldest-first), and the CLI modes
+  (`--table`, `--count`, `--head`).
+
+Pair with `rules/git-workflow.md` (already on origin/main) which
+declares `.worktrees/` the canonical root and forbids new work there
+from the main checkout.
+
 ## v0.1.6 (2026-09-02)
 
 **Breaking (install path):** the kit's operational hook scripts now install to
